@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이것은 자바스크립트 계산기이다.</title>
+    <style>
+        .container {
+            width: 410px;
+            height: 550px;
+        }
+        .displayContainer {
+            width: 400px;
+            height: 140px;
+        }
+        .buttonContainer {
+            width: 400px;
+            height: 100px;
+            display: grid;
+            grid-template-rows: 100px 100px 100px 100px;
+            grid-template-columns: 100px 100px 100px 100px;
+        }
+
+        #previousOperand_display{
+            width: 400px;
+            height: 50px;
+            font-size: 30px;
+            text-align:right;
+        }
+
+        #currentOperand_display{
+            width: 400px;
+            height: 80px;
+            font-size: 70px;
+            text-align:right;
+        }
+
+        button {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+<div class=container>
+    <div class="displayContainer">
+        <div id="previousOperand_display"> </div>
+        <div id="currentOperand_display">0</div>
+    </div>
+    <div class="buttonContainer">
+        <button class="numberButton" id="num1">1</button>
+        <button class="numberButton" id="num2">2</button>
+        <button class="numberButton" id="num3">3</button>
+        <button id="clear">C</button>
+        <button class="numberButton" id="num4">4</button>
+        <button class="numberButton" id="num5">5</button>
+        <button class="numberButton" id="num6">6</button>
+        <button class="operatorButton">+</button>
+        <button class="numberButton" id="num7">7</button>
+        <button class="numberButton" id="num8">8</button>
+        <button class="numberButton" id="num9">9</button>
+        <button class="operatorButton">-</button>
+        <button class="numberButton" id="num0">0</button>
+        <button class="operatorButton">*</button>
+        <button class="operatorButton">/</button>
+        <button id="result">=</button>
+    </div>
+</div>
+
+
+<script>
+
+    let num1 = '';
+    let num2 = '';
+    let operator = '';
+
+    let currentOperand = document.querySelector("#currentOperand_display");
+    let previousOperand = document.querySelector("#previousOperand_display");
+
+
+    //숫자버튼 작동
+    let numberButton_array = document.getElementsByClassName("numberButton");
+    let numberButtonClicked = function() {
+        if (operator === '') {
+            num1 = num1 + this.innerText;
+            console.log("num1: " + num1);
+            currentOperand.innerText = num1;
+        } else {
+            num2 = num2 + this.innerText;
+            console.log("num2: " + num2);
+            currentOperand.innerText = num2;
+        }
+    };
+    for (let i = 0; i < numberButton_array.length; i++) {
+        numberButton_array[i].addEventListener('click', numberButtonClicked, false);
+    }
+
+    //사칙연산버튼 작동
+    let operatorButton_array=document.getElementsByClassName("operatorButton");
+    let operatorButtonClicked = function() {
+        if(num1 !== '') {
+            if (num2 !== '') {
+                let intNum1= parseInt(num1);
+                let intNum2= parseInt(num2);
+                let intResult = intNum1 + intNum2;
+                if(operator === "+"){
+                    num1 = intResult.toString();
+                    num2='';
+                    console.log("PlusResult:"+num1);
+                    currentOperand.innerText= num1;
+                    previousOperand.innerText= num1 + operator;
+                }else if(operator === "-"){
+                    num1=intNum1-intNum2;
+                    num2='';
+                    currentOperand.innerText= num1;
+                    console.log("minusResult:"+num1);
+                    previousOperand.innerText= num1 + operator;
+                }else if(operator === "*"){
+                    num1=intNum1*intNum2;
+                    num2='';
+                    currentOperand.innerText= num1;
+                    console.log("multipleResult:"+num1);
+                    previousOperand.innerText= num1 + operator;
+                }else if(operator === "/"){
+                    num1=intNum1/intNum2;
+                    num2='';
+                    currentOperand.innerText= num1;
+                    console.log("spliceResult:"+num1);
+                    previousOperand.innerText= num1 + operator;
+                }
+            } else {
+                operator = this.innerText;
+                console.log("operator: " + operator);
+                currentOperand.innerText = num1;
+                previousOperand.innerText= num1 + operator;
+            }
+        }else{
+            alert("숫자를 먼저 입력해주세요");
+        }
+    };
+    for(let i =0; i<operatorButton_array.length; i++){
+        operatorButton_array[i].addEventListener('click',operatorButtonClicked, false);
+    }
+
+    //결과버튼 작동
+    document.querySelector('#result').addEventListener('click', function() {
+        let intNum1= parseInt(num1);
+        let intNum2= parseInt(num2);
+        let intResult = intNum1 + intNum2;
+        if(operator === "+"){
+            previousOperand.innerText= num1 + operator + num2;
+            num1 = intResult.toString();
+            num2='';
+            console.log("PlusResult:"+num1);
+            currentOperand.innerText= num1;
+        }else if(operator === "-"){
+            previousOperand.innerText= num1 + operator + num2;
+            num1=intNum1-intNum2;
+            num2='';
+            currentOperand.innerText= num1;
+            console.log("minusResult:"+num1);
+        }else if(operator === "*"){
+            previousOperand.innerText= num1 + operator + num2;
+            num1=intNum1*intNum2;
+            num2='';
+            currentOperand.innerText= num1;
+            console.log("multipleResult:"+num1);
+        }else if(operator === "/"){
+            previousOperand.innerText= num1 + operator + num2;
+            num1=intNum1/intNum2;
+            num2='';
+            currentOperand.innerText= num1;
+            console.log("spliceResult:"+num1);
+        }
+    });
+
+    //클리어버튼 작동
+    document.querySelector('#clear').addEventListener('click', function() {
+            num1 = '';
+            num2 = '';
+            operator = '';
+            currentOperand.innerText = 0;
+            previousOperand.innerText = "";
+            console.log("cleared");
+        }
+    );
+
+</script>
+</body>
+
+</html>
